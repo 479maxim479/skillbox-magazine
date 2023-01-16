@@ -38,15 +38,18 @@ export default [
 		title: 'Гироскутер Razor Hovertrax 2.0',
 		price: 34900,
 		image: 'img/wheels.jpg'
-	}, {
+	},
+	{
 		title: 'Детский трюковой самокат Razor Grom',
 		price: 4990,
 		image: 'img/scooter.jpg'
-	}, {
+	},
+	{
 		title: 'Роллерсёрф Razor RipStik Air Pro',
 		price: 6690,
 		image: 'img/ripstik.jpg'
-	}, {
+	},
+	{
 		title: 'Наушники Sony',
 		price: 30690,
 		image: 'img/headphones.jpg'
@@ -55,7 +58,8 @@ export default [
 		title: 'Сони плейстейшн 5',
 		price: 62000,
 		image: 'img/ps5.webp'
-	}, {
+	},
+	{
 		title: 'Xbox series X',
 		price: 54990,
 		image: 'img/xbox series x.webp'
