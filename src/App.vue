@@ -1,6 +1,6 @@
 <template>
 
-<main class="content container">
+	<main class="content container">
 		<div class="content__top content__top--catalog">
 			<h1 class="content__title">
 				Каталог
@@ -11,21 +11,15 @@
 		</div>
 
 		<div class="content__catalog">
-			<ProductFilter
-				:price-from.sync="filterPriceFrom"
-				:price-to.sync="filterPriceTo"
-				:category-id.sync="filterCategoryId"
-			/>
+
+			<ProductFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo"
+				:category-id.sync="filterCategoryId" />
 
 			<section class="catalog">
-				
+
 				<ProductList :products="products" />
 
-				<BasePagination
-					v-model="page"
-					:count="countProducts"
-					:per-page="productsPerPage"
-				/>
+				<BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage" />
 
 			</section>
 
@@ -41,7 +35,7 @@ import ProductFilter from './components/ProductFilter';
 
 export default {
 	name: 'App',
-	components: { ProductList, BasePagination, ProductFilter},
+	components: { ProductList, BasePagination, ProductFilter },
 	data() {
 		return {
 			filterPriceFrom: 0,
@@ -52,21 +46,21 @@ export default {
 		}
 	},
 	computed: {
-		filteredProducts(){
+		filteredProducts() {
 			let filteredProducts = products;
 
-			if(this.filterPriceFrom > 0) {
+			if (this.filterPriceFrom > 0) {
 				filteredProducts = filteredProducts.filter(product => product.price > this.filterPriceFrom)
 			}
 
-			if(this.filterPriceTo > 0) {
+			if (this.filterPriceTo > 0) {
 				filteredProducts = filteredProducts.filter(product => product.price < this.filterPriceTo)
 			}
 
-			if(this.filterCategoryId) {
+			if (this.filterCategoryId) {
 				filteredProducts = filteredProducts.filter(product => product.categoryId === this.filterCategoryId)
 			}
-	
+
 			return filteredProducts;
 		},
 		products() {
