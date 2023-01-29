@@ -2,7 +2,7 @@
 	<aside class="filter">
 		<h2 class="filter__title">Фильтры</h2>
 
-		<form class="filter__form form" action="#" method="get"  @submit.prevent="submit">
+		<form class="filter__form form" action="#" method="get" @submit.prevent="submit">
 			<fieldset class="form__block">
 				<legend class="form__legend">Цена</legend>
 				<label class="form__label form__label--price">
@@ -20,21 +20,26 @@
 				<label class="form__label form__label--select">
 					<select class="form__select" type="text" name="category" v-model.number="currentCategoryId">
 						<option value="0">Все категории</option>
-						<option 
-							v-for="category in categories"
-							:value="category.id"  
-							:key="category.id">
-							{{category.title}}
+						<option v-for="category in categories" :value="category.id" :key="category.id">
+							{{ category.title }}
 						</option>
-		
+
 					</select>
 				</label>
 			</fieldset>
 
 			<fieldset class="form__block">
 				<legend class="form__legend">Цвет</legend>
-				
-				<ProductColorFilter/>
+				<ul class="colors">
+					<li class="colors__item" v-for="color in colors" :key="color.id">
+						<label class="colors__label">
+							<input class="colors__radio sr-only" type="radio" :checked="currentFilterColorId" name="color"
+								:value="color.id" v-model.number="currentFilterColorId">
+							<span class="colors__value" :style="{ 'background-color': color.background }">
+							</span>
+						</label>
+					</li>
+				</ul>
 
 			</fieldset>
 
@@ -109,23 +114,25 @@
 </template>
 
 <script>
-
+import colors from '@/data/colors';
 import categories from '@/data/categories';
-import ProductColorFilter from './ProductColorFilter';
 
 export default {
-	components:{ProductColorFilter},
 	data() {
 		return {
 			currentPriceFrom: 0,
 			currentPriceTo: 0,
-			currentCategoryId: 0
+			currentCategoryId: 0,
+			currentFilterColorId: 0
 		}
 	},
-	props: ['priceFrom','priceTo','categoryId'],
+	props: ['priceFrom', 'priceTo', 'categoryId', 'filterColorId'],
 	computed: {
 		categories() {
 			return categories;
+		},
+		colors() {
+			return colors
 		}
 	},
 	watch: {
@@ -137,6 +144,9 @@ export default {
 		},
 		categoryId(value) {
 			this.currentCategoryId = value;
+		},
+		filterColorId(value) {
+			this.currentFilterColor = value;
 		}
 	},
 	methods: {
@@ -144,11 +154,13 @@ export default {
 			this.$emit('update:priceFrom', this.currentPriceFrom)
 			this.$emit('update:priceTo', this.currentPriceTo)
 			this.$emit('update:categoryId', this.currentCategoryId)
+			this.$emit('update:filterColorId', this.currentFilterColorId)
 		},
 		reset() {
 			this.$emit('update:priceFrom', 0);
 			this.$emit('update:priceTo', 0);
 			this.$emit('update:categoryId', 0);
+			this.$emit('update:filterColorId', this.currentFilterColorId = 0)
 		}
 	}
 }

@@ -13,7 +13,7 @@
 		<div class="content__catalog">
 
 			<ProductFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo"
-				:category-id.sync="filterCategoryId" />
+				:category-id.sync="filterCategoryId" :filter-color-id.sync="filterColorId" />
 
 			<section class="catalog">
 
@@ -41,6 +41,7 @@ export default {
 			filterPriceFrom: 0,
 			filterPriceTo: 0,
 			filterCategoryId: 0,
+			filterColorId: 0,
 			page: 1,
 			productsPerPage: 3,
 		}
@@ -59,6 +60,10 @@ export default {
 
 			if (this.filterCategoryId) {
 				filteredProducts = filteredProducts.filter(product => product.categoryId === this.filterCategoryId)
+			}
+
+			if (this.filterColorId) {
+				filteredProducts = filteredProducts.filter(product => product.colorId === this.filterColorId)
 			}
 
 			return filteredProducts;

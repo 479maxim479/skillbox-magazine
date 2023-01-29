@@ -51,7 +51,7 @@ export default {
 	},
 	data() {
 		return {
-			color: '#73B6EA'
+			color: '#73B6EA;'
 		}
 	}
 }
