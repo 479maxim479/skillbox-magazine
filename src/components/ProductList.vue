@@ -5,7 +5,7 @@
 				<ProductItem 
 					:image="product.image" 
 					:title="product.title" 
-					:price="product.price" 
+					:price="product.price"
 				/>
 			</li>
 		</ul>
@@ -17,6 +17,6 @@ import ProductItem from './ProductItem';
 
 export default {
 	components: { ProductItem },
-	props: { products: Array }
+	props: ['products']
 }
 </script>

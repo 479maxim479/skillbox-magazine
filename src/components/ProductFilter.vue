@@ -31,11 +31,11 @@
 			<fieldset class="form__block">
 				<legend class="form__legend">Цвет</legend>
 				<ul class="colors">
-					<li class="colors__item" v-for="color in colors" :key="color.id">
+					<li class="colors__item" v-for="color in colors" :key="color">
 						<label class="colors__label">
 							<input class="colors__radio sr-only" type="radio" :checked="currentFilterColorId" name="color"
-								:value="color.id" v-model.number="currentFilterColorId">
-							<span class="colors__value" :style="{ 'background-color': color.background }">
+								:value="color" v-model="currentFilterColorId">
+							<span class="colors__value" :style="{ 'background-color': color }">
 							</span>
 						</label>
 					</li>

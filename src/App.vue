@@ -32,6 +32,7 @@ import products from './data/products';
 import ProductList from './components/ProductList';
 import BasePagination from './components/BasePagination';
 import ProductFilter from './components/ProductFilter';
+// import colors from './data/colors';
 
 export default {
 	name: 'App',
@@ -41,7 +42,7 @@ export default {
 			filterPriceFrom: 0,
 			filterPriceTo: 0,
 			filterCategoryId: 0,
-			filterColorId: 0,
+			filterColorId: null,
 			page: 1,
 			productsPerPage: 3,
 		}

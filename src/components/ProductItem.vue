@@ -44,14 +44,15 @@
 export default {
 	name: 'ProductItem',
 	props: {
-		product: Object,
+		// product: Object,
 		title: String,
 		price: Number,
-		image: Object,
+		image: String,
 	},
 	data() {
 		return {
-			color: '#73B6EA;'
+			color: '#73B6EA;',
+			colorOne: '#73B6EA;'
 		}
 	}
 }
