@@ -1,6 +1,6 @@
 <template>
 	<li class="catalog__item">
-			<a class="catalog__pic" href="#" @click.prevent="$emit('gotoPage','product',{id: product.id})">
+			<a class="catalog__pic" href="#" @click.prevent="gotoPage('product',{id: product.id})">
 			<img :src="product.image" :alt="product.title">
 			</a>
 
@@ -11,7 +11,7 @@
 			</h3>
 
 			<span class="catalog__price">
-			{{ product.price }}
+			{{ product.price | formatNumber }}
 			</span>
 
 			<ul class="colors colors--black">
@@ -33,6 +33,9 @@
 </template>
 
 <script>
+import gotoPage from '@/helpers/gotoPage';
+import formatNumber from '@/helpers/formatNumber';
+
 export default {
 	name: 'ProductItem',
 	props: ['product'],
@@ -41,12 +44,14 @@ export default {
 			color: '#73B6EA;',
 		}
 	},
+	filters: { formatNumber },
 	methods: {
 		background(colValue) {
 			return {
 				'background-color': colValue,
 			}
-		}
+		},
+		gotoPage
 	}
 }
 </script>
