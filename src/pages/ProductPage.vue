@@ -55,7 +55,7 @@
           {{ product.title }}
         </h2>
         <div class="item__form">
-          <form class="form" action="#" method="POST">
+          <form class="form" action="#" method="POST" @submit.prevent="addToCart">
             <b class="item__price">
               {{ product.price | formatNumber }} ₽
             </b>
@@ -119,24 +119,23 @@
 
             <div class="item__row">
               <div class="form__counter">
-                <button type="button" aria-label="Убрать один товар">
+                <button type="button" aria-label="Убрать один товар" @click="productAmount--">
                   <svg width="12" height="12" fill="currentColor">
                     <use xlink:href="#icon-minus"></use>
                   </svg>
                 </button>
 
-                <input type="text" value="1" name="count">
+                <input type="text" v-model="productAmount">
 
-                <button type="button" aria-label="Добавить один товар">
+                <button type="button" aria-label="Добавить один товар" @click="productAmount++">
                   <svg width="12" height="12" fill="currentColor">
                     <use xlink:href="#icon-plus"></use>
                   </svg>
                 </button>
               </div>
-
-              <button class="button button--primery" type="submit">
-                В корзину
-              </button>
+                <button class="button button--primery" type="submit">
+                  В корзину
+                </button>
             </div>
           </form>
         </div>
@@ -177,7 +176,6 @@
           <a href="#">
             Все характеристики
           </a>
-  
           <h3>Что это?</h3>
   
           <p>
@@ -202,6 +200,11 @@ import gotoPage from '@/helpers/gotoPage';
 import formatNumber from '@/helpers/formatNumber';
 
 	export default {
+		data() {
+			return {
+				productAmount: 1
+			}
+		},
 		filters: { formatNumber },
 		computed: {
 			product() {
@@ -212,7 +215,13 @@ import formatNumber from '@/helpers/formatNumber';
 			}
 		},
 		methods: {
-			gotoPage, 
+			gotoPage,
+			addToCart() {
+				this.$store.commit(
+					'addProductToCart', 
+					{productId: this.product.id, amount: this.productAmount}
+				)
+			}
 		}
 	}
 </script>
