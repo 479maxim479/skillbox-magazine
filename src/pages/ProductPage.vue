@@ -1,5 +1,7 @@
 <template>
-	<main class="content container">
+	<main class="content container" v-if="productLoading">Загрузка товара...</main>
+	<main class="content container" v-else-if="!productData">Не удалось загрузить товар</main>
+	<main class="content container" v-else>	
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
@@ -19,31 +21,25 @@
         </li>
       </ul>
     </div>
-
     <section class="item">
       <div class="item__pics pics">
         <div class="pics__wrapper">
-          <img width="570" height="570" :src="product.image" :alt="product.title">
+          <img width="570" height="570" :src="product.image?.file?.url" :alt="product.title">
         </div>
         <ul class="pics__list">
           <li class="pics__item">
             <a href="" class="pics__link pics__link--current">
-              <img width="98" height="98" :src="product.image" :alt="product.title">
+              <img width="98" height="98" :src="product.image?.file?.url" :alt="product.title">
             </a>
           </li>
           <li class="pics__item">
             <a href="" class="pics__link">
-              <img width="98" height="98" :src="product.image" :alt="product.title">
+              <img width="98" height="98" :src="product.image?.file?.url" :alt="product.title">
             </a>
           </li>
           <li class="pics__item">
             <a href="" class="pics__link">
-              <img width="98" height="98" :src="product.image" :alt="product.title">
-            </a>
-          </li>
-          <li class="pics__item">
-            <a class="pics__link" href="#">
-              <img width="98" height="98" :src="product.image" :alt="product.title">
+              <img width="98" height="98" :src="product.image?.file?.url" :alt="product.title">
             </a>
           </li>
         </ul>
@@ -133,10 +129,15 @@
                   </svg>
                 </button>
               </div>
-                <button class="button button--primery" type="submit">
+                <button class="button button--primery" type="submit" :disabled="productAddSending">
                   В корзину
                 </button>
             </div>
+						<div v-show="productAddSending" class="loader">
+							<img src="img/svg/491.gif" alt="Загрузка товаров...">
+						</div>
+						<div class="loader" v-show="productAdded">Товар добавлен в корзину</div>
+
           </form>
         </div>
       </div>
@@ -194,34 +195,71 @@
 </template>
 
 <script>
-import products from '@/data/products';
-import categories from '@/data/categories';
 import gotoPage from '@/helpers/gotoPage';
 import formatNumber from '@/helpers/formatNumber';
+import axios from 'axios';
+import { API_BASE_URL } from '@/config';
+import { mapActions } from 'vuex';
+
 
 	export default {
 		data() {
 			return {
-				productAmount: 1
+				productAmount: 1,
+				productData: null,
+				productLoading: false,
+				productLoadingFailed: false,
+
+				productAdded: false,
+				productAddSending: false
 			}
 		},
 		filters: { formatNumber },
 		computed: {
 			product() {
-				return products.find(product => product.id === +this.$route.params.id)
+				return this.productData
 			},
 			category() {
-				return categories.find(category => category.id === this.product.categoryId)
+				return this.productData.category
 			}
 		},
 		methods: {
+			...mapActions(['addProductCart']),
+
 			gotoPage,
 			addToCart() {
-				this.$store.commit(
-					'addProductToCart', 
-					{productId: this.product.id, amount: this.productAmount}
-				)
+				this.productAdded = false;
+				this.productAddSending = true;
+
+				this.addProductCart({productId: this.product.id, amount: this.productAmount})
+					.then(() => {
+						this.productAdded = true;
+						this.productAddSending = false;
+					})
+			},
+			loadProduct() {
+				this.productLoading = true;
+				this.productLoadingFailed = false;
+				axios.get(API_BASE_URL + '/api/products/' + this.$route.params.id)
+				.then(response => this.productData = response.data)
+				.catch(() => this.productLoadingFailed = true)
+				.then(() => this.productLoading = false)
+
+			}
+		},
+		watch: {
+			'$route.params.id': {
+				handler() {
+					this.loadProduct();
+				},
+				immediate: true
 			}
 		}
 	}
 </script>
+<style scoped>
+	.loader {
+		text-align: center;
+		/* margin: auto; */
+	}
+</style>

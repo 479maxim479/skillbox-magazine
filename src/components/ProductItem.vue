@@ -22,9 +22,9 @@
 						class="colors__radio sr-only" 
 						type="radio"
 						:name="product.id"
-						:value="color" 
+						:value="color.code" 
 					>
-					<span class="colors__value" :style="background(color)">
+					<span class="colors__value" :style="background(color.code)">
 					</span>
 				</label>
 				</li>

@@ -31,18 +31,18 @@
 			<fieldset class="form__block">
 				<legend class="form__legend">Цвет</legend>
 				<ul class="colors">
-					<li class="colors__item" v-for="color in colors" :key="color.id">
+					<li class="colors__item" v-for="color in productCategories" :key="color.id">
 						<label class="colors__label" :for="color.id">
 							<input 
 								class="colors__radio sr-only" 
 								type="radio"
 								name="color"
 								:id="color.id" 
-								:value="color.value" 
+								:value="color.id" 
 								v-model="currentFilterColor"
-								@click='clicked(color.value)'
+								@click='clicked(color.id)'
 							>
-							<span class="colors__value" :style="background(color.value)">
+							<span class="colors__value" :style="background(color.code)">
 							</span>
 						</label>
 					</li>
@@ -121,8 +121,11 @@
 </template>
 
 <script>
-import colors from '@/data/colors';
-import categories from '@/data/categories';
+// import colors from '@/data/colors';
+// import categories from '@/data/categories';
+import axios from 'axios';
+import { API_BASE_URL } from '@/config'
+
 
 export default {
 	data() {
@@ -130,16 +133,20 @@ export default {
 			currentPriceFrom: 0,
 			currentPriceTo: 0,
 			currentCategoryId: 0,
-			currentFilterColor: 0
+			currentFilterColor: 0,
+
+			categoriesData: null,
+			productCategoriesData: null
 		}
 	},
 	props: ['priceFrom', 'priceTo', 'categoryId', 'filterColor'],
 	computed: {
 		categories() {
-			return categories;
+			return this.categoriesData? this.categoriesData.items: [];
 		},
-		colors() {
-			return colors
+		productCategories() {
+			// return colors
+			return this.productCategoriesData? this.productCategoriesData.items: [];
 		}
 	},
 	watch: {
@@ -176,7 +183,19 @@ export default {
 			return {
 				'background-color': colValue,
 			}
+		},
+		loadCategories() {
+			axios.get(API_BASE_URL + '/api/productCategories')
+				.then(response => this.categoriesData = response.data)
+		},
+		loadColors() {
+			axios.get(API_BASE_URL + '/api/colors')
+				.then(response => this.productCategoriesData = response.data)
 		}
+	},
+	created() {
+		this.loadCategories(),
+		this.loadColors()
 	}
 }
 </script>
