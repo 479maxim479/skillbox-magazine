@@ -11,9 +11,18 @@ export default new Vuex.Store({
 
 		userAccessKey: null,
 
-		cartProductsData: []
+		cartProductsData: [],
+
+		orderInfo: null
 	},
 	mutations: {
+		updateOrderInfo(state, orderInfo) {
+			state.orderInfo = orderInfo;
+		},
+		resetCart(state) { //мутация для очистки корзины
+			state.cartProducts = [];
+			state.cartProductsData = [];
+		},
 		updateCartProductAmount(state, {productId, amount}) {
 			const item = state.cartProducts.find(item => item.productId === productId)// находим товар в корзине
 			if(item) {
@@ -55,6 +64,9 @@ export default new Vuex.Store({
 				}
 			})
 		},
+		orderInfo(state) {
+			return state.orderInfo
+		},
 		cartTotalPrice(state, getters) {
 			return getters.cartDetailProducts.reduce((acc,item) => (item.product.price * item.amount) + acc, 0)
 		},
@@ -63,6 +75,17 @@ export default new Vuex.Store({
 		}
 	},
 	actions: {
+		loadOrderInfo(context, orderId) {
+			return axios
+					.get(API_BASE_URL + '/api/orders/' + orderId, {
+						params: {
+							userAccessKey: context.state.userAccessKey
+						}
+					})
+					.then(response => {
+						context.commit('updateOrderInfo', response.data) // передача данных в мутацию
+					})
+		},
 		loadCart(context) {
 			return axios
 					.get(API_BASE_URL + '/api/baskets', {
@@ -75,8 +98,6 @@ export default new Vuex.Store({
 							localStorage.setItem('userAccessKey', response.data.user.accessKey);
 							context.commit('updateUserAccessKey', response.data.user.accessKey);
 						}
-
-						
 						context.commit('updateCartProductsData', response.data.items);
 						context.commit('syncCartProducts');
 					})

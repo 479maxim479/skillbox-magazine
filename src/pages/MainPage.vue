@@ -5,14 +5,18 @@
 				Каталог
 			</h1>
 			<span class="content__info">
-				152 товара
+				Количество товаров: {{ countProducts }}  
 			</span>
 		</div>
 
 		<div class="content__catalog">
 
-			<ProductFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo"
-				:category-id.sync="filterCategoryId" :filter-color.sync="filterColor" />
+			<ProductFilter 
+				:price-from.sync="filterPriceFrom" 
+				:price-to.sync="filterPriceTo"
+				:category-id.sync="filterCategoryId" 
+				:filter-color.sync="filterColor" 
+			/>
 
 			<section class="catalog">
 
@@ -22,11 +26,18 @@
 				</div>
 				<div v-if="productsLoadingFailed">Произошла ошибка при загрузке товаров <button @click.prevent="loadProducts">Попробовать ещё раз</button></div>
 
-				<ProductList :products="products" @gotoPage="(pageName, pageParams) => $emit('gotoPage', pageName, pageParams)"/>
+				<ProductList 
+					:products="products" 
+					@gotoPage="(pageName, pageParams) => $emit('gotoPage', pageName, pageParams)"
+				/>
 
 					<!-- <ProductList :products="products"/> -->
 
-				<BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage" />
+				<BasePagination 
+					v-model="page" 
+					:count="countProducts" 
+					:per-page="productsPerPage" 
+				/>
 
 			</section>
 
