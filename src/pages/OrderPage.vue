@@ -45,13 +45,22 @@
 							title="Адрес доставки" 
 							placeholder="Введите ваш адрес"
 						/>
-						<base-form-text 
-							v-model="formData.phone" 
-							type="tel" 
-							:error="formError.phone" 
-							title="Телефон" 
-							placeholder="Введите ваш телефон"
-						/>
+						<b-row>
+							<b-col>
+								<base-form-text 
+									v-model="formData.phone" 
+									type="tel" 
+									:error="formError.phone" 
+									title="Телефон" 
+									placeholder="Введите ваш телефон"
+								/>
+								<span
+									v-if="!this.validatePhone" class="text-danger"
+								>
+								{{ errorsValidation.code[0] }}
+								</span>
+							</b-col>
+						</b-row>
 						<base-form-text 
 							v-model="formData.email" 
 							type="email" 
@@ -111,7 +120,7 @@
           </div>
         </div>
 				<div>
-				
+			
 					<OrderProductList 
 						:products="productsOrderPage"
 						:totalPrice="totalPrice"
@@ -160,10 +169,33 @@
 					price: item.product.price,
 					amount: item.amount
 				}))
+			},
+			validatePhone(){
+				if(this.formData.phone) {
+					let regex = /^(\+7|8)\d{0,10}$/;
+          return regex.test(this.formData.phone);
+				
+				} else {
+					return true
+				}
+      },
+			errorsValidation() {
+				const errors ={};
+
+				errors.code = [];
+				if (!this.validatePhone) {
+        errors.code.push('Телефон должен начинаться на +7');
+      }
+
+			return errors
 			}
 		},
 		methods: {
 			order() {
+				if(!this.validatePhone) {
+					return
+				} else {
+				this.validatePhone	
 				this.formError = {}
 				this.formErrorMessage = '' // при отправке сбрасываем значение
 
@@ -184,6 +216,18 @@
 					this.formErrorMessage = error.response.data.error.message
 				})
 			}
+			}
 		}
 	}
 </script>
+<style scoped>
+	.text-danger {
+		position: relative;
+    font-size: 11px;
+    line-height: 14px;
+    color: #ff4d00;
+    left: 20px;
+		bottom: 4px;
+	}
+    
+</style>
